@@ -11,18 +11,19 @@ export class DevtoController {
   @Get('postspanish')
   async getDataStatistics(@Res() res) {
     console.log('llegada');
-    const devtoEspanhol: IResponseDevTo[] =
-      await this.statisticService.getDataDevToEspanhol();
-    const devtoEspanol: IResponseDevTo[] =
-      await this.statisticService.getDataDevToEspanol();
-    const devtoSpanish: IResponseDevTo[] =
-      await this.statisticService.getDataDevToSpanish();
-    const devto: IResponseDevTo[] = devtoEspanhol
-      .concat(devtoSpanish)
-      .concat(devtoEspanol);
-
-    devto.sort((a, b) => b.id - a.id);
-
-    return res.status(HttpStatus.OK).json(devto);
+    try {
+      const devtoEspanhol: IResponseDevTo[] =
+        await this.statisticService.getDataDevToEspanhol();
+      devtoEspanhol.push(
+        ...(await this.statisticService.getDataDevToEspanol()),
+      );
+      devtoEspanhol.push(
+        ...(await this.statisticService.getDataDevToSpanish()),
+      );
+      devtoEspanhol.sort((a, b) => b.id - a.id);
+      return res.status(HttpStatus.OK).json(devtoEspanhol);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
