@@ -6,34 +6,34 @@ import { IResponseDevTo } from './models/devto-response.model';
 @Injectable()
 export class DevtoService {
   constructor(private http: HttpService) {}
-  async getDataDevToEspanol(): Promise<IResponseDevTo[]> {
+  async getDataDevToEspanol(page: string): Promise<IResponseDevTo[]> {
     const config = { 'api-key': 'p8euw9mGdAf7VvN9vmA5rWsb' };
     const data = await lastValueFrom(
       this.http
-        .get('https://dev.to/api/articles?tag=espanol&page=1', {
+        .get(`https://dev.to/api/articles?tag=espanol&page=${page}`, {
           headers: config,
         })
         .pipe(map((res) => res.data)),
     );
     return data;
   }
-  async getDataDevToSpanish(): Promise<IResponseDevTo[]> {
+  async getDataDevToSpanish(page: string): Promise<IResponseDevTo[]> {
     const config = { 'api-key': 'p8euw9mGdAf7VvN9vmA5rWsb' };
     const data = await lastValueFrom(
       this.http
-        .get('https://dev.to/api/articles?tag=spanish&page=1', {
+        .get(`https://dev.to/api/articles?tag=spanish&page=${page}`, {
           headers: config,
         })
         .pipe(map((res) => res.data)),
     );
     return data;
   }
-  async getDataDevToEspanhol(): Promise<IResponseDevTo[]> {
+  async getDataDevToEspanhol(page: string): Promise<IResponseDevTo[]> {
     console.log('llegamos aqui');
     const config = { 'api-key': 'p8euw9mGdAf7VvN9vmA5rWsb' };
     const data = await lastValueFrom(
       this.http
-        .get('https://dev.to/api/articles?tag=espa%C3%B1ol&page=1', {
+        .get(`https://dev.to/api/articles?tag=espa%C3%B1ol&page=${page}`, {
           headers: config,
         })
         .pipe(map((response) => response.data)),
