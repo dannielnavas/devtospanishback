@@ -30,7 +30,6 @@ export class DevtoService {
     return data;
   }
   async getDataDevToEspanhol(page: string): Promise<IResponseDevTo[]> {
-    console.log('llegamos aqui');
     const config = { 'api-key': 'p8euw9mGdAf7VvN9vmA5rWsb' };
     const data = await lastValueFrom(
       this.http
@@ -39,7 +38,6 @@ export class DevtoService {
         })
         .pipe(map((response) => response.data)),
     );
-    console.log(data);
     return data;
   }
 
@@ -52,7 +50,6 @@ export class DevtoService {
         })
         .pipe(map((response) => response.data)),
     );
-    console.log(data);
     return data;
   }
 }

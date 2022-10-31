@@ -10,7 +10,7 @@ export class DevtoController {
   async getDataDevto(@Res() res, @Param('page') page: string) {
     console.log('llegada');
     try {
-      const devtoEspanhol: IResponseDevTo[] =
+      let devtoEspanhol: IResponseDevTo[] =
         await this.devtoService.getDataDevToEspanhol(page);
       devtoEspanhol.push(
         ...(await this.devtoService.getDataDevToEspanol(page)),
@@ -18,10 +18,14 @@ export class DevtoController {
       devtoEspanhol.push(
         ...(await this.devtoService.getDataDevToSpanish(page)),
       );
-      devtoEspanhol.sort((a, b) => b.id - a.id);
-      return res.status(HttpStatus.OK).json(devtoEspanhol);
+      devtoEspanhol = devtoEspanhol.sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() -
+          new Date(a.published_at).getTime(),
+      );
+      return res.status(HttpStatus.OK).json([...new Set(devtoEspanhol)]);
     } catch (error) {
-      console.log(error);
+      return res.status(HttpStatus.NOT_FOUND);
     }
   }
 
