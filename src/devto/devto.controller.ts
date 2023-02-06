@@ -25,7 +25,8 @@ export class DevtoController {
       );
       return res.status(HttpStatus.OK).json([...new Set(devtoEspanhol)]);
     } catch (error) {
-      return res.status(HttpStatus.NOT_FOUND);
+      console.warn(error);
+      return res.status(HttpStatus.FORBIDDEN);
     }
   }
 
@@ -37,6 +38,47 @@ export class DevtoController {
       return res.status(HttpStatus.OK).json(user);
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Get('extension')
+  async getDataForExtension(@Res() res) {
+    console.log('llegada');
+    try {
+      let devtoEspanhol: IResponseDevTo[] =
+        await this.devtoService.getDataDevToEspanhol('1');
+      devtoEspanhol.push(...(await this.devtoService.getDataDevToEspanol('1')));
+      devtoEspanhol.push(...(await this.devtoService.getDataDevToSpanish('1')));
+      devtoEspanhol = devtoEspanhol.sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() -
+          new Date(a.published_at).getTime(),
+      );
+      return res.status(HttpStatus.OK).json([...devtoEspanhol.slice(0, 3)]);
+    } catch (error) {
+      console.warn(error);
+      return res.status(HttpStatus.FORBIDDEN);
+    }
+  }
+  @Get('extension-random')
+  async getDataForExtensionRandom(@Res() res) {
+    console.log('llegada');
+    try {
+      let devtoEspanhol: IResponseDevTo[] =
+        await this.devtoService.getDataDevToEspanhol('1');
+      devtoEspanhol.push(...(await this.devtoService.getDataDevToEspanol('1')));
+      devtoEspanhol.push(...(await this.devtoService.getDataDevToSpanish('1')));
+      devtoEspanhol = devtoEspanhol.sort(
+        (a, b) =>
+          new Date(b.published_at).getTime() -
+          new Date(a.published_at).getTime(),
+      );
+      // random
+      devtoEspanhol = devtoEspanhol.sort(() => Math.random() - 0.5);
+      return res.status(HttpStatus.OK).json([...devtoEspanhol.slice(0, 3)]);
+    } catch (error) {
+      console.warn(error);
+      return res.status(HttpStatus.FORBIDDEN);
     }
   }
 }
