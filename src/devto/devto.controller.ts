@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
 import { DevtoService } from './devto.service';
 import { IResponseDevTo } from './models/devto-response.model';
@@ -8,7 +9,6 @@ export class DevtoController {
 
   @Get('postspanish/:page')
   async getDataDevto(@Res() res, @Param('page') page: string) {
-    console.log('llegada');
     try {
       let devtoEspanhol: IResponseDevTo[] =
         await this.devtoService.getDataDevToEspanhol(page);
@@ -18,11 +18,16 @@ export class DevtoController {
       devtoEspanhol.push(
         ...(await this.devtoService.getDataDevToSpanish(page)),
       );
-      devtoEspanhol = devtoEspanhol.sort(
+
+      // Eliminar duplicados y ordenar por fecha
+      const unique = [...new Set(devtoEspanhol)];
+      console.log(unique);
+      devtoEspanhol = unique.sort(
         (a, b) =>
           new Date(b.published_at).getTime() -
           new Date(a.published_at).getTime(),
       );
+
       return res.status(HttpStatus.OK).json([...new Set(devtoEspanhol)]);
     } catch (error) {
       console.warn(error);
